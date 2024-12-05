@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitnami: Open Source. Simplified</title>
+  <link href="bitnami.css" media="all" rel="Stylesheet" type="text/css" />
+  <link href="/dashboard/stylesheets/all.css" rel="stylesheet" type="text/css" />
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #6e7dff, #5a55f5);
+      transition: background-color 0.3s ease;
+    }
+    .dark-theme {
+      background-color: #121212;
+    }
+    #app {
+      width: 100%;
+      max-width: 480px;
+      padding: 25px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .dark-theme #app {
+      background: #333;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      color: #5a55f5;
+      margin-bottom: 20px;
+    }
+    h1.dark-theme {
+      color: #f0f0f0;
+    }
+
+    /* Input Form */
+    form {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: 0.3s;
+    }
+    input[type="text"]:focus {
+      box-shadow: 0 0 5px #5a55f5;
+    }
+    button {
+      padding: 12px 18px;
+      font-size: 1rem;
+      background-color: #5a55f5;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #4a4bcf;
+    }
+
+    /* Task List */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 30px;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #fff;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    li:hover {
+      transform: translateX(5px);
+    }
+    .dark-theme li {
+      background: #2f2f2f;
+      color: #fff;
+    }
+    .completed {
+      text-decoration: line-through;
+      color: #888;
+    }
+
+    .actions button {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .actions button:hover {
+      color: #5a55f5;
+    }
+
+    /* Theme Button */
+    #theme-toggle {
+      padding: 12px 18px;
+      font-size: 1rem;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+    .dark-theme #theme-toggle {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    #theme-toggle:hover {
+      background-color: #5a55f5;
+      color: #fff;
+    }
+
+    /* Clear Completed */
+    #clear-completed {
+      padding: 12px 18px;
+      font-size: 1rem;
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+    #clear-completed:hover {
+      background-color: #c82333;
+    }
+
+    /* Task Counter */
+    #task-counter {
+      text-align: center;
+      font-size: 1rem;
+      color: #5a55f5;
+      margin-top: 10px;
+    }
+
+    /* Filter buttons */
+    #filter-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .filter-btn {
+      padding: 10px;
+      font-size: 0.9rem;
+      background-color: #5a55f5;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .filter-btn:hover {
+      background-color: #4a4bcf;
+    }
+  </style>
+</head>
+<body>
+  <div class="contain-to-grid">
+    <nav class="top-bar" data-topbar>
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/dashboard/index.html">Apache Friends</a></h1>
+        </li>
+        <li class="toggle-topbar menu-icon">
+          <a href="#">
+            <span>Menu</span>
+          </a>
+        </li>
+      </ul>
+
+      <section class="top-bar-section">
+        <!-- Right Nav Section -->
+        <ul class="right">
+          <li class="active"><a href="/applications.html">Applications</a></li>
+          <li><a href="/dashboard/faq.html">FAQs</a></li>
+          <li><a href="/dashboard/howto.html">HOW-TO Guides</a></li>
+          <li><a target="_blank" href="/dashboard/phpinfo.php">PHPInfo</a></li>
+          <li><a href="/phpmyadmin/">phpMyAdmin</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+
+  <div id="wrapper">
+    <div class="hero">
+      <div class="row">
+        <div class="large-12 columns">
+          <p>Apache Friends and Bitnami are cooperating to make dozens of open source applications available on XAMPP, for free. Bitnami-packaged applications include Wordpress, Drupal, Joomla! and dozens of others and can be deployed with one-click installers. Visit the <a href="https://bitnami.com/xampp?utm_source=bitnami&utm_medium=installer&utm_campaign=XAMPP%2BModule" target="_blank">Bitnami XAMPP page</a> for details on the currently available apps.</p><br/>
+          <p>Check out our <a href="https://www.apachefriends.org/bitnami_for_xampp.html" target="_blank" >Bitnami for XAMPP Start Guide</a> for more information about the applications installed.</p>
+        </div>
+      </div>
+    </div>
+    <div id="lowerContainer" class="row">
+      <div id="content" class="large-12 columns">
+        <!-- @@BITNAMI_MODULE_PLACEHOLDER@@ -->
+      </div>
+    </div>
+  </div>
+
+  <div id="app">
+    <h1>To-Do List</h1>
+    <form id="task-form">
+      <input type="text" id="task-input" placeholder="Tambahkan tugas baru..." required>
+      <button type="submit">Tambah</button>
+    </form>
+    <ul id="task-list"></ul>
+    <button id="clear-completed">Hapus Tugas Selesai</button>
+    <button id="theme-toggle">Tema Gelap</button>
+    <div id="task-counter">Tugas: 0 dari 0 selesai</div>
+
+    <!-- Filter buttons -->
+    <div id="filter-buttons">
+      <button class="filter-btn" id="show-all">Semua</button>
+      <button class="filter-btn" id="show-active">Aktif</button>
+      <button class="filter-btn" id="show-completed">Seles

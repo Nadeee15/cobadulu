@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List Interaktif</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #6e7dff, #5a55f5);
+      transition: background-color 0.3s ease;
+    }
+    .dark-theme {
+      background-color: #121212;
+    }
+    #app {
+      width: 100%;
+      max-width: 480px;
+      padding: 25px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .dark-theme #app {
+      background: #333;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      color: #5a55f5;
+      margin-bottom: 20px;
+    }
+    h1.dark-theme {
+      color: #f0f0f0;
+    }
+
+    /* Input Form */
+    form {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      outline: none;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: 0.3s;
+    }
+    input[type="text"]:focus {
+      box-shadow: 0 0 5px #5a55f5;
+    }
+    button {
+      padding: 12px 18px;
+      font-size: 1rem;
+      background-color: #5a55f5;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #4a4bcf;
+    }
+
+    /* Task List */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 30px;
+    }
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #fff;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    li:hover {
+      transform: translateX(5px);
+    }
+    .dark-theme li {
+      background: #2f2f2f;
+      color: #fff;
+    }
+    .completed {
+      text-decoration: line-through;
+      color: #888;
+    }
+
+    .actions button {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .actions button:hover {
+      color: #5a55f5;
+    }
+
+    /* Theme Button */
+    #theme-toggle {
+      padding: 12px 18px;
+      font-size: 1rem;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+    .dark-theme #theme-toggle {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    #theme-toggle:hover {
+      background-color: #5a55f5;
+      color: #fff;
+    }
+
+    /* Clear Completed */
+    #clear-completed {
+      padding: 12px 18px;
+      font-size: 1rem;
+      background-color: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+    #clear-completed:hover {
+      background-color: #c82333;
+    }
+
+    /* Task Counter */
+    #task-counter {
+      text-align: center;
+      font-size: 1rem;
+      color: #5a55f5;
+      margin-top: 10px;
+    }
+
+    /* Filter buttons */
+    #filter-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .filter-btn {
+      padding: 10px;
+      font-size: 0.9rem;
+      background-color: #5a55f5;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .filter-btn:hover {
+      background-color: #4a4bcf;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>To-Do List</h1>
+    <form id="task-form">
+      <input type="text" id="task-input" placeholder="Tambahkan tugas baru..." required>
+      <button type="submit">Tambah</button>
+    </form>
+    <ul id="task-list"></ul>
+    <button id="clear-completed">Hapus Tugas Selesai</button>
+    <button id="theme-toggle">Tema Gelap</button>
+    <div id="task-counter">Tugas: 0 dari 0 selesai</div>
+
+    <!-- Filter buttons -->
+    <div id="filter-buttons">
+      <button class="filter-btn" id="show-all">Semua</button>
+      <button class="filter-btn" id="show-active">Aktif</button>
+      <button class="filter-btn" id="show-completed">Selesai</button>
+    </div>
+  </div>
+
+  <script>
+    const taskForm = document.getElementById('task-form');
+    const taskInput = document.getElementById('task-input');
+    const taskList = document.getElementById('task-list');
+    const themeToggle = document.getElementById('theme-toggle');
+    const taskCounter = document.getElementById('task-counter');
+    const clearCompletedBtn = document.getElementById('clear-completed');
+    const showAllBtn = document.getElementById('show-all');
+    const showActiveBtn = document.getElementById('show-active');
+    const showCompletedBtn = document.getElementById('show-completed');
+
+    // Load tasks from localStorage
+    function loadTasks() {
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      tasks.forEach(task => {
+        const li = createTaskElement(task.text, task.completed, task.timestamp);
+        taskList.appendChild(li);
+      });
+      updateTaskCounter();
+    }
+
+    // Save tasks to localStorage
+    function saveTasks() {
+      const tasks = [];
+      document.querySelectorAll('#task-list li').forEach(task => {
+        tasks.push({
+          text: task.querySelector('span').textContent,
+          completed: task.querySelector('span').classList.contains('completed'),
+          timestamp: task.dataset.timestamp
+        });
+      });
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      updateTaskCounter();
+    }
+
+    // Update task counter
+    function updateTaskCounter() {
+      const totalTasks = taskList.children.length;
+      const completedTasks = document.querySelectorAll('.completed').length;
+      taskCounter.textContent = `Tugas: ${completedTasks} dari ${totalTasks} selesai`;
+    }
+
+    // Create task element
+    function createTaskElement(text, completed = false, timestamp = Date.now()) {
+      const li = document.createElement('li');
+      li.dataset.timestamp = timestamp;
+      li.innerHTML = `
+        <span class="${completed ? 'completed' : ''}">${text}</span>
+        <div class="actions">
+          <button class="complete-btn">✔</button>
+          <button class="delete-btn">🗑</button>
+        </div>
+      `;
+      return li;
+    }
+
+    // Add new task
+    taskForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const taskText = taskInput.value.trim();
+      if (taskText === '') return;
+
+      const timestamp = Date.now();
+      const li = createTaskElement(taskText, false, timestamp);
+      taskList.appendChild(li);
+      taskInput.value = '';
+      saveTasks();
+    });
+
+    // Mark task as completed or delete
+    taskList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('complete-btn')) {
+        e.target.closest('li').querySelector('span').classList.toggle('completed');
+      } else if (e.target.classList.contains('delete-btn')) {
+        e.target.closest('li').remove();
+      }
+      saveTasks();
+    });
+
+    // Theme toggle
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-theme');
+      themeToggle.textContent = document.body.classList.contains('dark-theme')
+        ? 'Tema Terang'
+        : 'Tema Gelap';
+    });
+
+    // Clear completed tasks
+    clearCompletedBtn.addEventListener('click', () => {
+      document.querySelectorAll('.completed').forEach(task => task.closest('li').remove());
+      saveTasks();
+    });
+
+    // Filter tasks
+    showAllBtn.addEventListener('click', () => {
+      showAllTasks();
+    });
+
+    showActiveBtn.addEventListener('click', () => {
+      filterTasks('active');
+    });
+
+    showCompletedBtn.addEventListener('click', () => {
+      filterTasks('completed');
+    });
+
+    function showAllTasks() {
+      document.querySelectorAll('#task-list li').forEach(task => {
+        task.style.display = 'flex';
+      });
+    }
+
+    function filterTasks(status) {
+      document.querySelectorAll('#task-list li').forEach(task => {
+        const isCompleted = task.querySelector('span').classList.contains('completed');
+        if (status === 'active' && isCompleted) {
+          task.style.display = 'none';
+        } else if (status === 'completed' && !isCompleted) {
+          task.style.display = 'none';
+        } else {
+          task.style.display = 'flex';
+        }
+      });
+    }
+
+    // Initialize app
+    loadTasks();
+  </script>
+</body>
+</html>
